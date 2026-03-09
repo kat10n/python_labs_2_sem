@@ -2,7 +2,7 @@ from src.models import Task
 
 
 class FileSource:
-    """Загружает задачи из txt-файла (формат: id;payload на каждой строке)."""
+    """Загружает задачи из txt-файла"""
 
     def __init__(self, filename: str) -> None:
         self.filename = filename

@@ -5,5 +5,5 @@ from src.models import Task
 
 @runtime_checkable
 class TaskSource(Protocol):
-    """Контракт для источников задач."""
+    """Протокол для источников задач."""
     def get_tasks(self) -> list[Task]: ...

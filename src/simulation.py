@@ -37,22 +37,22 @@ def run() -> None:
             continue
 
         if command == 1:
-            print("--- Задачи из файла ---")
-            file_src = create_source(FileSource, "tasks.txt")
+            print("Задачи из файла")
+            file_src = create_source(FileSource, "src/text_files/tasks.txt")
             process_tasks(file_src)
 
         elif command == 2:
-            print("--- Задачи из API ---")
+            print("Задачи из API")
             api = create_source(ApiStubSource)
             process_tasks(api)
 
         elif command == 3:
-            print("--- Задачи из генератора ---")
+            print("Задачи из генератора")
             gen = create_source(GeneratorSource, 5)
             process_tasks(gen)
 
-        elif command == 4:
-            print("--- Проверка контракта (issubclass) ---")
+        elif command == 4: # Проверка subclass и isinstance
+            print("Проверка контракта (issubclass)")
             for cls in [FileSource, GeneratorSource, ApiStubSource]:
                 result = issubclass(cls, TaskSource)
                 print(f"  {cls.__name__}: {result}")
@@ -60,13 +60,13 @@ def run() -> None:
             class BadSource:
                 pass
 
-            print(f"  BadSource: {issubclass(BadSource, TaskSource)}")
+            print(f"BadSource: {issubclass(BadSource, TaskSource)}")
 
             print("\nПопытка создать BadSource:")
             try:
                 create_source(BadSource)
             except TypeError as e:
-                print(f"  Ошибка: {e}")
+                print(f"Ошибка: {e}")
 
         elif command == 5:
             print("Выход.")
