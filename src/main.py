@@ -13,7 +13,7 @@ basicConfig(filename='shell.log', encoding='utf-8',
 
 def create_source(source_class: type, *args, **kwargs) -> TaskSource:
     """Создаёт источник, проверяя контракт через issubclass."""
-    if not issubclass(source_class, TaskSource):
+    if not issubclass(source_class, TaskSource): # работает с классами
         logger.error("%s не реализует протокол TaskSource", source_class.__name__)
         raise TypeError(f"{source_class.__name__} не реализует TaskSource")
     logger.info("Создан источник %s", source_class.__name__)
@@ -22,7 +22,7 @@ def create_source(source_class: type, *args, **kwargs) -> TaskSource:
 
 def process_tasks(source: TaskSource) -> None:
     """Проверяет источник через isinstance и печатает его задачи."""
-    if not isinstance(source, TaskSource):
+    if not isinstance(source, TaskSource): # работает с экземплярами
         logger.error("%s не реализует протокол TaskSource", type(source).__name__)
         raise TypeError(f"{type(source).__name__} не реализует TaskSource")
 
