@@ -10,8 +10,10 @@ class GeneratorSource:
 
     def __init__(self, count: int) -> None:
         if not isinstance(count, int) or isinstance(count, bool):
+            logger.error('Количество задач не целое число')
             raise TypeError("Количество задач должно быть целым числом")
         if count < 0:
+            logger.error('Количество задач отрицательно')
             raise ValueError("Количество задач не может быть отрицательным")
         self.count = count
 

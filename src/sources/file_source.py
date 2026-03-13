@@ -11,10 +11,13 @@ class FileSource:
 
     def __init__(self, filename: str) -> None:
         if not isinstance(filename, str):
+            logger.error('Имя файла не строка')
             raise TypeError("Имя файла должно быть строкой")
         if not filename:
+            logger.error('Имя файла пусто')
             raise ValueError("Имя файла не должно быть пустым")
         if not filename.lower().endswith(".txt"):
+            logger.error('Расширение файла не .txt')
             raise ValueError("Файл должен иметь расширение .txt")
         self.filename = filename
 
