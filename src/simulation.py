@@ -16,9 +16,8 @@ def show_menu() -> None:
 
 def run() -> None:
     command = 0
-
+    show_menu()
     while command != 5:
-        show_menu()
         try:
             command = int(input("Введите номер действия: "))
         except ValueError:
@@ -45,17 +44,6 @@ def run() -> None:
                 for cls in [FileSource, GeneratorSource, ApiStubSource]:
                     result = issubclass(cls, TaskSource)
                     print(f"  {cls.__name__}: {result}")
-
-                class BadSource:
-                    pass
-
-                print(f"BadSource: {issubclass(BadSource, TaskSource)}")
-
-                print("\nПопытка создать BadSource:")
-                try:
-                    create_source(BadSource)
-                except TypeError as e:
-                    print(f"Ошибка: {e}")
 
             elif command == 5:
                 print("Выход.")
