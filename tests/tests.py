@@ -11,9 +11,6 @@ from src.sources.api_stub import ApiStubSource
 from src.main import create_source, process_tasks
 
 
-# ── Модель задачи (Task) ──
-
-
 class TestTask:
     def test_create(self):
         task = Task(id="1", payload="data")
@@ -39,9 +36,6 @@ class TestTask:
         assert task.payload == {"key": "value"}
 
 
-# ── Протокол TaskSource ──
-
-
 class TestTaskSourceProtocol:
     def test_file_source_is_subclass(self):
         assert issubclass(FileSource, TaskSource)
@@ -65,9 +59,6 @@ class TestTaskSourceProtocol:
         class Bad:
             pass
         assert not isinstance(Bad(), TaskSource)
-
-
-# ── FileSource ──
 
 
 class TestFileSource:
@@ -110,9 +101,6 @@ class TestFileSource:
             FileSource("tasks.csv")
 
 
-# ── GeneratorSource ──
-
-
 class TestGeneratorSource:
     def test_count(self):
         assert len(GeneratorSource(5).get_tasks()) == 5
@@ -138,9 +126,6 @@ class TestGeneratorSource:
             GeneratorSource(1.5)
 
 
-# ── ApiStubSource ──
-
-
 class TestApiStubSource:
     def test_get_tasks_count(self):
         assert len(ApiStubSource().get_tasks()) == 2
@@ -153,9 +138,6 @@ class TestApiStubSource:
     def test_returns_task_instances(self):
         for t in ApiStubSource().get_tasks():
             assert isinstance(t, Task)
-
-
-# ── create_source ──
 
 
 class TestCreateSource:
@@ -180,9 +162,6 @@ class TestCreateSource:
             create_source(Bad)
 
 
-# ── process_tasks ──
-
-
 class TestProcessTasks:
     def test_prints_tasks(self, capsys):
         process_tasks(GeneratorSource(2))
@@ -201,9 +180,6 @@ class TestProcessTasks:
             pass
         with pytest.raises(TypeError, match="не реализует TaskSource"):
             process_tasks(Bad())
-
-
-# ── Симуляция ──
 
 
 class TestSimulation:
