@@ -102,5 +102,5 @@ python -m pytest --cov=src tests/tests.py --cov-report=term-missing
 - Функция `process_tasks` — вывод задач и проверка контракта
 - Интерактивная симуляция — все пункты меню
 
-Покрытие кода составляет 94%.
-![img.png](img.png)
+Покрытие кода составляет 96%.
+![img_1.png](img_1.png)
