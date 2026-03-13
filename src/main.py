@@ -2,11 +2,15 @@ from src.protocols import TaskSource
 from src.sources.api_stub import ApiStubSource
 from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 def create_source(source_class: type, *args, **kwargs) -> TaskSource:
     """Создаёт источник, проверяя контракт через issubclass."""
     if not issubclass(source_class, TaskSource):
+        logger.error(f"{source_class.__name__} не реализует TaskSource")
         raise TypeError(f"{source_class.__name__} не реализует TaskSource")
     return source_class(*args, **kwargs)
 
@@ -14,6 +18,7 @@ def create_source(source_class: type, *args, **kwargs) -> TaskSource:
 def process_tasks(source: TaskSource) -> None:
     """Проверяет источник через isinstance и печатает его задачи."""
     if not isinstance(source, TaskSource):
+        logger.error(f"{type(source).__name__} не реализует TaskSource")
         raise TypeError(f"{type(source).__name__} не реализует TaskSource")
 
     for task in source.get_tasks():
