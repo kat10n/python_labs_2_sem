@@ -182,12 +182,14 @@ class TestProcessTasks:
             process_tasks(Bad())
 
 
+
+
 class TestSimulation:
     @patch("builtins.input", side_effect=["5"])
     def test_exit(self, mock_input, capsys):
         from src.simulation import run
         run()
-        assert "Выход" in capsys.readouterr().out
+        assert "Выход" in capsys.readouterr().out # будет написано выход если ввести 5
 
     @patch("builtins.input", side_effect=["1", "5"])
     def test_file_menu(self, mock_input, capsys):
