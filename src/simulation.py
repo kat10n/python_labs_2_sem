@@ -9,9 +9,6 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-TASKS_FILE = Path(__file__).resolve().parent / "text_files" / "tasks.txt"
-
-
 def show_menu() -> None:
     print("\nВыберите действие:")
     print("1 Получить задачи из файла (tasks.txt)")
@@ -33,7 +30,7 @@ def run() -> None:
         try:
             if command == 1:
                 print("Задачи из файла")
-                file_src = create_source(FileSource, str(TASKS_FILE))
+                file_src = create_source(FileSource, "text_files/tasks.txt")
                 process_tasks(file_src)
 
             elif command == 2:
