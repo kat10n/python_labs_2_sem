@@ -1,19 +1,10 @@
 """Интерактивная симуляция подсистемы приёма задач."""
 
-from src.models import Task
 from src.protocols import TaskSource
 from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
 from src.sources.api_stub import ApiStubSource
 from src.main import create_source, process_tasks
-
-
-def print_tasks(tasks: list[Task]) -> None:
-    if not tasks:
-        print("Список пуст.")
-        return
-    for task in tasks:
-        print(f"  [{task.id}] {task.payload}")
 
 
 def show_menu() -> None:
