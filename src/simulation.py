@@ -59,6 +59,7 @@ def run() -> None:
 
             else:
                 print("Неизвестная команда.")
+                logger.info(f"Введена неизвестная команда: {command}")
         except:
             print('Не удалось выполнить действие.')
 
