@@ -5,6 +5,8 @@ from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
 from src.sources.api_stub import ApiStubSource
 from src.main import create_source, process_tasks
+from logging import getLogger
+logger = getLogger(__name__)
 
 
 TASKS_FILE = Path(__file__).resolve().parent / "text_files" / "tasks.txt"
@@ -49,6 +51,11 @@ def run() -> None:
                 for cls in [FileSource, GeneratorSource, ApiStubSource]:
                     result = issubclass(cls, TaskSource)
                     print(f"  {cls.__name__}: {result}")
+
+                class BadSource:
+                    pass
+
+                print(f"  BadSource: {issubclass(BadSource, TaskSource)}")
 
             elif command == 5:
                 print("Выход.")
