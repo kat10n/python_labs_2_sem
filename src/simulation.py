@@ -1,8 +1,13 @@
+from pathlib import Path
+
 from src.protocols import TaskSource
 from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
 from src.sources.api_stub import ApiStubSource
 from src.main import create_source, process_tasks
+
+
+TASKS_FILE = Path(__file__).resolve().parent / "text_files" / "tasks.txt"
 
 
 def show_menu() -> None:
@@ -26,7 +31,7 @@ def run() -> None:
         try:
             if command == 1:
                 print("Задачи из файла")
-                file_src = create_source(FileSource, "src/text_files/tasks.txt")
+                file_src = create_source(FileSource, str(TASKS_FILE))
                 process_tasks(file_src)
 
             elif command == 2:
