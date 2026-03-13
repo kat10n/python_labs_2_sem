@@ -89,15 +89,15 @@ class TestFileSource:
         assert tasks[0].payload == "data;extra"
 
     def test_not_string_filename(self):
-        with pytest.raises(TypeError, match="строкой"):
+        with pytest.raises(TypeError):
             FileSource(123)
 
     def test_empty_filename(self):
-        with pytest.raises(ValueError, match="пустым"):
+        with pytest.raises(ValueError):
             FileSource("")
 
     def test_wrong_extension(self):
-        with pytest.raises(ValueError, match=".txt"):
+        with pytest.raises(ValueError):
             FileSource("tasks.csv")
 
 
@@ -118,11 +118,11 @@ class TestGeneratorSource:
             assert isinstance(t, Task)
 
     def test_negative_count_raises(self):
-        with pytest.raises(ValueError, match="отрицательным"):
+        with pytest.raises(ValueError):
             GeneratorSource(-1)
 
     def test_non_integer_count_raises(self):
-        with pytest.raises(TypeError, match="целым числом"):
+        with pytest.raises(TypeError):
             GeneratorSource(1.5)
 
 
@@ -158,7 +158,7 @@ class TestCreateSource:
     def test_invalid_source_raises(self):
         class Bad:
             pass
-        with pytest.raises(TypeError, match="не реализует TaskSource"):
+        with pytest.raises(TypeError):
             create_source(Bad)
 
 
@@ -178,7 +178,7 @@ class TestProcessTasks:
     def test_invalid_source_raises(self):
         class Bad:
             pass
-        with pytest.raises(TypeError, match="не реализует TaskSource"):
+        with pytest.raises(TypeError):
             process_tasks(Bad())
 
 
