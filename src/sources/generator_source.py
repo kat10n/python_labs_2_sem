@@ -9,7 +9,7 @@ class GeneratorSource:
     """Программно генерирует задачи в заданном количестве."""
 
     def __init__(self, count: int) -> None:
-        if not isinstance(count, int) or isinstance(count, bool):
+        if not isinstance(count, int):
             logger.error('Количество задач не целое число')
             raise TypeError("Количество задач должно быть целым числом")
         if count < 0:

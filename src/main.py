@@ -34,7 +34,7 @@ def process_tasks(source: TaskSource) -> None:
 
 if __name__ == "__main__":
     sources = [
-        create_source(FileSource, "src/text_files/tasks.txt"),
+        create_source(FileSource, "text_files/tasks.txt"),
         create_source(GeneratorSource, 5),
         create_source(ApiStubSource),
     ]
