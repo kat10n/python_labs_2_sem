@@ -33,8 +33,6 @@ def process_tasks(source: TaskSource) -> None:
 
 
 if __name__ == "__main__":
-    logger.info("Логирование включено")
-
     sources = [
         create_source(FileSource, "src/text_files/tasks.txt"),
         create_source(GeneratorSource, 5),
