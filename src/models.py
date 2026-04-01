@@ -10,8 +10,6 @@ class StringValidator:
     """
     DATA-дескриптор: хранит строку в __set_name__-имени на экземпляре.
     Проверяет, что значение — непустая строка.
-    Это DATA-дескриптор (есть __set__), поэтому имеет приоритет
-    над __dict__ экземпляра.
     """
 
     def __set_name__(self, owner: type, name: str) -> None:
@@ -35,7 +33,6 @@ class StringValidator:
 class PriorityValidator:
     """
     DATA-дескриптор: проверяет, что приоритет — целое число от 1 до 10.
-    Демонстрирует разницу от NON-DATA дескриптора тем, что имеет __set__.
     """
 
     MIN = 1
@@ -100,7 +97,6 @@ class Task:
     """
     Модель задачи с корректной инкапсуляцией и валидацией состояния.
     """
-
     id: str = StringValidator()
     description: str = StringValidator()
     priority: int = PriorityValidator()
@@ -123,7 +119,9 @@ class Task:
 
     @property
     def created_at(self) -> datetime:
-        """Время создания задачи. Read-only — изменить нельзя."""
+        """
+        Время создания задачи. Read-only — изменить нельзя.
+        """
         return self.__dict__["_created_at"]
 
     @created_at.setter
@@ -134,8 +132,6 @@ class Task:
     def is_ready(self) -> bool:
         """
         Вычисляемое свойство.
-        Задача готова к выполнению, если она в статусе 'pending'
-        и приоритет не ниже 3.
         """
         return self.status == "pending" and self.priority >= 3
 

@@ -10,8 +10,6 @@ from src.exeptions import (
 
 
 class TestTaskCreation:
-    """Базовое создание объекта."""
-
     def test_create_minimal(self):
         t = Task(id="t1", description="Описание")
         assert t.id == "t1"
@@ -80,7 +78,6 @@ class TestTaskPriorityValidation:
             Task(id="t", description="x", priority="high")  # type: ignore
 
     def test_priority_bool_raises(self):
-        """bool — подкласс int, но не должен приниматься как приоритет."""
         with pytest.raises(InvalidPriorityError):
             Task(id="t", description="x", priority=True)  # type: ignore
 
@@ -150,7 +147,6 @@ class TestIsReady:
 
 class TestDescriptorBehavior:
     def test_data_descriptor_blocks_instance_dict(self):
-        """DATA-дескриптор (priority) нельзя обойти через __dict__."""
         t = Task(id="t", description="x", priority=5)
         assert t.priority == 5
 
@@ -160,7 +156,6 @@ class TestDescriptorBehavior:
         assert t.priority == 9
 
     def test_two_tasks_dont_share_state(self):
-        """Каждый экземпляр хранит своё значение."""
         t1 = Task(id="1", description="a", priority=2)
         t2 = Task(id="2", description="b", priority=8)
         assert t1.priority == 2
