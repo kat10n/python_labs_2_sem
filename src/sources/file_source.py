@@ -32,6 +32,6 @@ class FileSource:
                 if not line:
                     continue
                 task_id, payload = line.split(";", maxsplit=1)
-                tasks.append(Task(id=task_id, payload=payload))
+                tasks.append(Task(id=task_id, description=payload, payload=payload))
         logger.info("Загружено %d задач из %s", len(tasks), self.filename)
         return tasks

@@ -18,6 +18,6 @@ class GeneratorSource:
         self.count = count
 
     def get_tasks(self) -> list[Task]:
-        tasks = [Task(id=str(i), payload=f"data_{i}") for i in range(self.count)]
+        tasks = [Task(id=str(i), description=f"Задача {i}", payload=f"data_{i}") for i in range(self.count)]
         logger.info("Сгенерировано %d задач", len(tasks))
         return tasks

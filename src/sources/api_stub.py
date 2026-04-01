@@ -10,8 +10,8 @@ class ApiStubSource:
 
     def get_tasks(self) -> list[Task]:
         tasks = [
-            Task(id="api_1", payload={"value": 100}),
-            Task(id="api_2", payload={"value": 200}),
+            Task(id="api_1", description="Запрос к серверу", payload={"value": 100}),
+            Task(id="api_2", description="Обработка ответа", payload={"value": 200}),
         ]
         logger.info("Получено %d задач из API-заглушки", len(tasks))
         return tasks
