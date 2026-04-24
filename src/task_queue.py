@@ -14,7 +14,6 @@ class TaskQueue:
         return len(self._dq)
 
     def __iter__(self):
-        # каждый раз новый итератор -> можно обходить очередь повторно
         return iter(self._dq)
 
     def __repr__(self):
@@ -44,6 +43,7 @@ class TaskQueue:
 
     def iter_filtered(self, status=None, min_priority=None, max_priority=None, predicate=None):
         """Ленивый фильтр, ничего не копирует."""
+        # если параметр не передан, фильтр не применяется
         for task in self._dq:
             if status is not None and task.status != status:
                 continue
@@ -51,12 +51,13 @@ class TaskQueue:
                 continue
             if max_priority is not None and task.priority > max_priority:
                 continue
-            if predicate is not None and not predicate(task):
+            if predicate is not None and not predicate(task): # функция с True/False
                 continue
             yield task
 
     def process(self, handler, consume=True, status=None, min_priority=None, max_priority=None, predicate=None):
-        """Потоковая обработка, consume=True -> достаём из очереди."""
+        """Потоковая обработка, consume=True -> достаём из очереди.
+            handler - функция, которую применяют к каждой задаче."""
         if consume:
             while self._dq:
                 task = self._dq.popleft()

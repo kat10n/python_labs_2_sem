@@ -9,12 +9,11 @@ from src.exeptions import (
 class StringValidator:
     """
     DATA-дескриптор: хранит строку в __set_name__-имени на экземпляре.
-    Проверяет, что значение — непустая строка.
+    Проверяет, что значение непустая строка.
     """
 
     def __set_name__(self, owner: type, name: str) -> None:
-        # приватное имя для хранения значения на экземпляре
-        self._attr = f"_sv_{name}"
+        self._attr = f"_sv_{name}" # храним данные под уникальным ключом без конфликтов
         self._name = name
 
     def __get__(self, obj: Any, objtype: type | None = None) -> str:
@@ -43,7 +42,7 @@ class PriorityValidator:
 
     def __get__(self, obj: Any, objtype: type | None = None) -> int:
         if obj is None:
-            return self          # type: ignore[return-value]
+            return self
         return getattr(obj, self._attr, self.MIN)
 
     def __set__(self, obj: Any, value: Any) -> None:
@@ -63,7 +62,7 @@ class StatusValidator:
     DATA-дескриптор: принимает только допустимые статусы задачи.
     """
 
-    ALLOWED: frozenset[str] = frozenset({"pending", "in_progress", "done", "cancelled"})
+    ALLOWED: frozenset[str] = frozenset({"pending", "in_progress", "done", "cancelled"}) # неизменяемое мн-во
 
     def __set_name__(self, owner: type, name: str) -> None:
         self._attr = f"_stv_{name}"
@@ -115,7 +114,7 @@ class Task:
         self.priority = priority
         self.status = status
         self.payload = payload
-        self.__dict__["_created_at"] = datetime.now()
+        self.__dict__["_created_at"] = datetime.now() # created_at - это @property с заблокированным сеттером
 
     @property
     def created_at(self) -> datetime:
@@ -126,14 +125,14 @@ class Task:
 
     @created_at.setter
     def created_at(self, value: Any) -> None:
-        raise AttributeError("Время создания задачи изменить нельзя")
+        raise AttributeError("Время создания задачи изменить нельзя") # время создания задаётся один раз
 
     @property
     def is_ready(self) -> bool:
         """
         Вычисляемое свойство.
         """
-        return self.status == "pending" and self.priority >= 3
+        return self.status == "pending" and self.priority >= 3 # не храним, а вычисляем каждый раз
 
     def __repr__(self) -> str:
         return (
