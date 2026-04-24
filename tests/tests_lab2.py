@@ -71,15 +71,15 @@ class TestTaskPriorityValidation:
 
     def test_priority_float_raises(self):
         with pytest.raises(InvalidPriorityError):
-            Task(id="t", description="x", priority=5.0)  # type: ignore
+            Task(id="t", description="x", priority=5.0)
 
     def test_priority_string_raises(self):
         with pytest.raises(InvalidPriorityError):
-            Task(id="t", description="x", priority="high")  # type: ignore
+            Task(id="t", description="x", priority="high")
 
     def test_priority_bool_raises(self):
         with pytest.raises(InvalidPriorityError):
-            Task(id="t", description="x", priority=True)  # type: ignore
+            Task(id="t", description="x", priority=True)
 
 
 class TestTaskStatusValidation:

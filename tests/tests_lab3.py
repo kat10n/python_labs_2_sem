@@ -42,7 +42,7 @@ class TestTaskQueueBasics:
     def test_enqueue_type_check(self):
         q = TaskQueue()
         with pytest.raises(TypeError):
-            q.enqueue("not a task")  # type: ignore[arg-type]
+            q.enqueue("not a task")
 
 
 class TestTaskQueueFilters:
@@ -84,7 +84,7 @@ class TestTaskQueueProcessing:
 
         got = list(q.process(lambda t: t.id, consume=True, status="pending", min_priority=5))
         assert got == ["2"]
-        assert len(q) == 0  # consume=True: очередь опустела
+        assert len(q) == 0
 
     def test_process_consume_false_keeps_queue(self):
         q = TaskQueue(
