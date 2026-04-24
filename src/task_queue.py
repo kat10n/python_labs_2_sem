@@ -14,7 +14,7 @@ class TaskQueue:
         return len(self._dq)
 
     def __iter__(self):
-        return iter(self._dq)
+        return iter(self._dq) # каждый раз создается новый итератор
 
     def __repr__(self):
         return f"TaskQueue(size={len(self._dq)})"
