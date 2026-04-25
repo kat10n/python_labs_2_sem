@@ -119,7 +119,7 @@ class Task:
     @property
     def created_at(self) -> datetime:
         """
-        Время создания задачи. Read-only — изменить нельзя.
+        Время создания задачи. Read-only - изменить нельзя.
         """
         return self.__dict__["_created_at"]
 

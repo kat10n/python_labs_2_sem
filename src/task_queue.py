@@ -73,3 +73,7 @@ class TaskQueue:
         else:
             for task in self.iter_filtered(status, min_priority, max_priority, predicate):
                 yield handler(task)
+
+
+# gen = queue.iter_filtered(status="pending")
+# task = next(gen)
