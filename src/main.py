@@ -3,6 +3,8 @@ from src.protocols import TaskSource
 from src.sources.api_stub import ApiStubSource
 from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
+from src.models import Task
+from src.task_queue import TaskQueue
 
 
 logger = getLogger()
@@ -38,7 +40,34 @@ if __name__ == "__main__":
         create_source(GeneratorSource, 5),
         create_source(ApiStubSource),
     ]
-
+    print("Лаба 1")
     for src in sources:
         print(f"\n{type(src).__name__}")
         process_tasks(src)
+    print("Лаба 2")
+    task1 = Task(id="t1", description="djjfjfjfj", priority=9, status="pending")
+    task2 = Task(id="t2", description="fjfjfjf", priority=5, status="pending")
+    task3 = Task(id="t3", description="woowowowo", priority=3, status="done")
+    task4 = Task(id="t4", description="kfkfkfkfkf", priority=7, status="in_progress")
+    print(task1)
+    print(task2)
+    print(task3)
+    print(task4)
+    for task in [task1, task2, task3, task4]:
+        if task.is_ready:
+            print(task.id)
+    print("Лаба 3")
+    queue = TaskQueue(tasks=[task1, task2, task3, task4])
+    print(f"Длина очереди: {len(queue)}")
+    print("Task у которых status=pending")
+    for task in queue.iter_filtered(status="pending"):
+        print(task.id)
+    print("Task у которых min_priority=5")
+    for task in queue.iter_filtered(min_priority=5):
+        print(task.id)
+    def print_description(task):
+        return task.description
+    results = list(queue.process(print_description, consume=False, status="pending"))
+    print("Описания для task у которых status=pending")
+    for r in results:
+        print(f"{r}")

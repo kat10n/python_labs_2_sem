@@ -58,21 +58,10 @@ class TaskQueue:
     def process(self, handler, consume=True, status=None, min_priority=None, max_priority=None, predicate=None):
         """Потоковая обработка, consume=True -> достаём из очереди.
             handler - функция, которую применяют к каждой задаче."""
-        if consume:
-            while self._dq:
+        for task in self.iter_filtered(status, min_priority, max_priority, predicate):
+            if consume:
                 task = self._dq.popleft()
-                if status is not None and task.status != status:
-                    continue
-                if min_priority is not None and task.priority < min_priority:
-                    continue
-                if max_priority is not None and task.priority > max_priority:
-                    continue
-                if predicate is not None and not predicate(task):
-                    continue
-                yield handler(task)
-        else:
-            for task in self.iter_filtered(status, min_priority, max_priority, predicate):
-                yield handler(task)
+            yield handler(task)
 
 
 # gen = queue.iter_filtered(status="pending")
