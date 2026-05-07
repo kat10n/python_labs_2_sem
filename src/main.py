@@ -1,3 +1,4 @@
+import asyncio
 from logging import getLogger, basicConfig, DEBUG
 from src.protocols import TaskSource
 from src.sources.api_stub import ApiStubSource
@@ -5,13 +6,13 @@ from src.sources.file_source import FileSource
 from src.sources.generator_source import GeneratorSource
 from src.models import Task
 from src.task_queue import TaskQueue
+from src.executor import (AsyncTaskExecutor, TextPayloadHandler, DictPayloadHandler, FallbackHandler)
 
 
 logger = getLogger()
 format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
 basicConfig(filename='shell.log', encoding='utf-8',
             level=DEBUG, format=format, filemode='w')
-
 
 def create_source(source_class: type, *args, **kwargs) -> TaskSource:
     """Создаёт источник, проверяя контракт через issubclass."""
@@ -34,7 +35,7 @@ def process_tasks(source: TaskSource) -> None:
         print(f"  [{task.id}] {task.payload}")
 
 
-if __name__ == "__main__":
+async def main():
     sources = [
         create_source(FileSource, "text_files/tasks.txt"),
         create_source(GeneratorSource, 5),
@@ -71,3 +72,29 @@ if __name__ == "__main__":
     print("Описания для task у которых status=pending")
     for r in results:
         print(f"{r}")
+
+    print("Лаба 4")
+    t_text = Task(id="lab4_1", description="Текстовая задача", priority=1, status="pending")
+    t_text.payload = "Какой-то текст для обработки"
+
+    t_dict = Task(id="lab4_2", description="Словарная задача", priority=2, status="pending")
+    t_dict.payload = {"method": "GET", "url": "/api/users"}
+
+    t_fall = Task(id="lab4_3", description="Неизвестный тип", priority=3, status="pending")
+    t_fall.payload = 99999
+
+    t_skip = Task(id="lab4_4", description="Пропуск", priority=4, status="done")
+
+    queue4 = TaskQueue(tasks=[t_text, t_dict, t_fall, t_skip])
+
+    handlers = [
+        TextPayloadHandler(),
+        DictPayloadHandler(),
+        FallbackHandler()
+    ]
+
+    async with AsyncTaskExecutor(handlers=handlers) as executor:
+        await executor.run(queue4)
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,8 +1,8 @@
-# Платформа обработки задач - лабораторные работы 1-3
+# Платформа обработки задач - лабораторные работы 1-4
 
 **Галанова Екатерина, М8О-102БВ-25**
 
-Три лабораторные работы по курсу Python. Предметная область - платформа обработки задач: приём задач из разных источников, их валидация и хранение, итерация и потоковая обработка.
+4 лабораторные работы по курсу Python. Предметная область - платформа обработки задач: приём задач из разных источников, их валидация и хранение, итерация и потоковая обработка.
 
 ## Структура проекта
 
@@ -12,8 +12,8 @@ src/
   exeptions.py           - специализированные исключения
   protocols.py           - протокол TaskSource
   main.py                - фабрика источников и обработка задач
-  simulation.py          - интерактивная демонстрация через меню (лабы 1–3)
   task_queue.py          - очередь задач TaskQueue (лаба 3)
+  executor.py            - асинхронная очередь (лаба 4)
   sources/
     file_source.py       - загрузка задач из текстового файла
     generator_source.py  - программная генерация задач
@@ -24,6 +24,7 @@ tests/
   tests.py               - тесты лабораторной 1
   tests_lab2.py          - тесты лабораторной 2
   tests_lab3.py          - тесты лабораторной 3
+  tests_lab4.py          - тесты лабораторной 4
 ```
 
 ---
@@ -135,13 +136,49 @@ results = list(q.process(handler, consume=True, status="pending"))
 
 ---
 
+## Лабораторная работа 4 - Асинхронный исполнитель задач: протоколы и контекстные менеджеры
+
+Асинхронная обработка задач с использованием протокола `TaskHandler` и асинхронного контекстного менеджера `AsyncTaskExecutor`.
+
+### Протокол TaskHandler
+
+```python
+@runtime_checkable
+class TaskHandler(Protocol):
+    def can_handle(self, task: Task) -> bool: ...
+    async def handle(self, task: Task) -> None: ...
+```
+
+### Обработчики
+
+| Класс | Обрабатывает | Описание |
+|---|---|---|
+| `TextPayloadHandler` | `payload: str` | Имитирует обработку текстовых данных |
+| `DictPayloadHandler` | `payload: dict` | Имитирует обработку API-запросов |
+| `FallbackHandler` | Любые другие | Запасной обработчик для неизвестных типов |
+
+### AsyncTaskExecutor
+
+Асинхронный контекстный менеджер с валидацией обработчиков:
+
+```python
+handlers = [TextPayloadHandler(), DictPayloadHandler(), FallbackHandler()]
+
+async with AsyncTaskExecutor(handlers=handlers) as executor:
+    await executor.run(queue)
+```
+
+- **Валидация**: Проверяет, что все обработчики реализуют `TaskHandler`
+- **Последовательная обработка**: Задачи выполняются по очереди, но асинхронно внутри
+- **Фильтрация**: Обрабатывает только `task.is_ready == True`
+- **Отчёт**: Логирует успешные и неудачные выполнения
+
+---
+
 ## Запуск
 
-Интерактивная демонстрация (все три лабораторные):
-
 ```bash
-python -m src.simulation
-```
+python -m src.main.py
 
 Тесты:
 
@@ -154,6 +191,9 @@ python -m pytest tests/tests_lab2.py -v
 
 # лабораторная 3
 python -m pytest tests/tests_lab3.py -v
+
+# лабораторная 4
+python -m pytest tests/tests_lab4.py -v
 
 # все тесты
 python -m pytest tests/ -v
