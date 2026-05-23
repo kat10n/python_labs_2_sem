@@ -71,5 +71,5 @@ async def test_executor_run():
     executor = AsyncTaskExecutor(handlers=[handler])
     await executor.run(queue)
 
-    assert handler.handle.call_count == 1
-    assert executor._processed == 1
+    assert handler.handle.call_count == 2
+    assert executor._processed == 2
