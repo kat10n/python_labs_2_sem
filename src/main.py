@@ -7,6 +7,7 @@ from src.sources.generator_source import GeneratorSource
 from src.models import Task
 from src.task_queue import TaskQueue
 from src.executor import (AsyncTaskExecutor, TextPayloadHandler, DictPayloadHandler, FallbackHandler)
+from time import time
 
 
 logger = getLogger()
@@ -92,9 +93,10 @@ async def main():
         DictPayloadHandler(),
         FallbackHandler()
     ]
-
-    async with AsyncTaskExecutor(handlers=handlers) as executor:
+    start = time()
+    async with AsyncTaskExecutor(handlers=handlers) as executor: # объект класса
         await executor.run(queue4)
-
+    end = time()
+    print(f'Время выполнения асинхронных задач {end - start}')
 if __name__ == "__main__":
     asyncio.run(main())

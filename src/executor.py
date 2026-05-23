@@ -19,7 +19,7 @@ class TextPayloadHandler:
 
     async def handle(self, task: Task) -> None:
         logger.info(f"Взяли в работу текст (ID: {task.id}), содержимое: {task.payload}")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(2)
         logger.info(f"Закончили с текстовой задачей {task.id}")
 
 
@@ -34,20 +34,20 @@ class DictPayloadHandler:
 
     async def handle(self, task: Task) -> None:
         keys = list(task.payload.keys())
-        logger.info(f"Прилетела задачка со словарем (ID: {task.id}). Ключи: {keys}")
+        logger.info(f"Прилетела задача со словарем (ID: {task.id}). Ключи: {keys}")
         await asyncio.sleep(1)
-        logger.info(f"Словарик {task.id} обработан")
+        logger.info(f"Словарь {task.id} обработан")
 
 
 class FallbackHandler:
-    """Обрабатывает всё остальное - запасной вариант."""
+    """Обрабатывает всё остальное"""
 
     def can_handle(self, task: Task) -> bool:
         return True
 
     async def handle(self, task: Task) -> None:
-        logger.info(f"Непонятный тип данных у задачи {task.id}. Тип: {type(task.payload).__name__}. Просто пропускаем.")
-        await asyncio.sleep(0.1)
+        logger.info(f"Непонятный тип данных у задачи {task.id}. Тип: {type(task.payload).__name__}.")
+        await asyncio.sleep(3)
 
 
 class AsyncTaskExecutor:
@@ -61,7 +61,7 @@ class AsyncTaskExecutor:
         self._failed = 0
 
     async def __aenter__(self) -> "AsyncTaskExecutor":
-        """Валидация обработчиков при входе - аналог __set__ у дескриптора."""
+        """Валидация обработчиков при входе вызывается при async with"""
         if not self._handlers:
             raise ValueError("Список обработчиков не может быть пустым!")
         for h in self._handlers:
@@ -74,10 +74,10 @@ class AsyncTaskExecutor:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool:
-        """Освобождение ресурсов и финальный отчёт."""
+        """Освобождение ресурсов и выход из async with"""
         logger.info(f"Асинхронная очередь завершила работу.")
         print(f"Асинхронная очередь завершила работу.")
-        return False
+        return False # не подавляем ошибку
 
     async def _process(self, task: Task) -> None:
         """
@@ -106,26 +106,20 @@ class AsyncTaskExecutor:
 
     async def run(self, queue: TaskQueue) -> None:
         """
-        Обрабатывает только задачи с is_ready=True из TaskQueue.
-        Задачи выполняются строго по очереди (последовательно).
+        Обрабатывает все задачи со статусом pending из TaskQueue.
+        Задачи выполняются параллельно через asyncio.gather.
         """
         async_queue: asyncio.Queue[Task] = asyncio.Queue()
-        skipped = 0
 
         for task in queue.iter_filtered(status="pending"):
-            if task.is_ready:
-                await async_queue.put(task)
-            else:
-                skipped += 1
-
-        if skipped:
-            logger.info(f"Пропустили {skipped} задач, они еще не готовы к выполнению.")
-            print(f"Пропустили {skipped} задач, они еще не готовы к выполнению.")
+            await async_queue.put(task)
 
         logger.info(f"Готово к обработке: {async_queue.qsize()} задач в очереди.")
         print(f"Готово к обработке: {async_queue.qsize()} задач в очереди.")
 
+        coroutines = []
         while not async_queue.empty():
             task = await async_queue.get()
-            await self._process(task)
-            async_queue.task_done()
+            coroutines.append(self._process(task))
+
+        await asyncio.gather(*coroutines)
